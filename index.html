@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Qo'ng'irot tumani Ixtisoslashtirilgan maktab-internati 7-B sinfi rasmiy maktab portali">
+    <meta name="author" content="Rametullayev Sayidbek Alisherovich">
+    <title>7-B Sinfi | Qo'ng'irot Ixtisoslashtirilgan Maktab Portali</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            background-color: #f8fafc;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .glass { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .hero-bg { background: linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #0284c7 100%); }
+        .tab-active { background-color: #4f46e5; color: #ffffff; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); }
+        .tab-inactive { background-color: #ffffff; color: #475569; }
+        .tab-inactive:hover { background-color: #f1f5f9; color: #1e293b; }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col relative">
+
+    <!-- Optional School Background Overlay -->
+    <div id="schoolBgOverlay" class="fixed inset-0 pointer-events-none z-0 transition-opacity duration-300" style="background: rgba(248, 250, 252, 0.85); display: none;"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass border-b border-slate-200/80 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between gap-3">
+            <div onclick="switchMainTab('feed')" class="flex items-center gap-3 cursor-pointer group shrink-0">
+                <div class="w-11 h-11 rounded-2xl hero-bg flex items-center justify-center text-white font-extrabold text-lg shadow-md group-hover:scale-105 transition">
+                    7-B
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-extrabold text-slate-900 text-base sm:text-lg leading-tight">7-B Sinf Portali</h1>
+                        <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">Qo'ng'irot</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium">Aniq fanlar yo'nalishi • 2026-2027</p>
+                </div>
+            </div>
+
+            <div id="authHeaderArea" class="flex items-center gap-2 sm:gap-3"></div>
+        </div>
+
+        <!-- Secondary Navigation Tabs -->
+        <div class="bg-slate-50/90 border-t border-slate-200/70 overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2 min-w-max" id="mainNavTabs">
+                <button onclick="switchMainTab('feed')" data-tab="feed" class="nav-tab tab-active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper"></i> <span>Yangiliklar & Postlar</span>
+                </button>
+                <button onclick="switchMainTab('students')" data-tab="students" class="nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-trophy"></i> <span>O'quvchilar & Reyting</span>
+                </button>
+                <button onclick="switchMainTab('homework')" data-tab="homework" class="nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-book-open-reader"></i> <span>Uyga vazifalar</span>
+                    <span id="hwCountBadge" class="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+                <button onclick="switchMainTab('schedule')" data-tab="schedule" class="nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-days"></i> <span>Dars jadvali</span>
+                </button>
+                <button onclick="switchMainTab('school')" data-tab="school" class="nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-school"></i> <span>Ustozlar & Maktab</span>
+                </button>
+                <button id="navTabProfile" onclick="switchMainTab('profile')" data-tab="profile" class="hidden nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen"></i> <span>Mening Profilim</span>
+                </button>
+                <button id="navTabAdmin" onclick="switchMainTab('admin')" data-tab="admin" class="hidden nav-tab tab-inactive px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 border border-rose-200 bg-rose-50/70 text-rose-700">
+                    <i class="fa-solid fa-shield-halved"></i> <span>Admin Panel</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- ==================== TAB 1: FEED & POSTS ==================== -->
+        <section id="tab-feed" class="tab-section space-y-6">
+            <div class="hero-bg rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="max-w-2xl">
+                        <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold mb-3">
+                            <i class="fa-solid fa-sparkles text-amber-300"></i>
+                            <span>Qo'ng'irot tumani • 7-B Sinfi Rasmiy Sahifasi</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">Bilim, Ijod va Ahillik Maskani!</h2>
+                        <p class="text-indigo-100 text-sm sm:text-base leading-relaxed">
+                            Sinf yangiliklari, ART darslari ijodiy ishlari, uyga vazifalar va o'quvchilar reytingini real vaqt rejimida kuzatib boring.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 shrink-0">
+                        <div class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center">
+                            <div class="text-2xl font-extrabold text-amber-300">24</div>
+                            <div class="text-[11px] text-indigo-100 font-medium">O'quvchilar</div>
+                        </div>
+                        <div class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center">
+                            <div class="text-2xl font-extrabold text-emerald-300">20</div>
+                            <div class="text-[11px] text-indigo-100 font-medium">Ustozlar</div>
+                        </div>
+                        <div class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-center">
+                            <div id="heroPostCount" class="text-2xl font-extrabold text-cyan-200">0</div>
+                            <div class="text-[11px] text-indigo-100 font-medium">Postlar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Create Post Box -->
+                    <div id="createPostCard" class="hidden bg-white/95 rounded-3xl p-6 border border-indigo-200 shadow-md">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base">Yangi post joylash</h3>
+                                <p class="text-xs text-slate-500">Sinf rahbari va Adminlar uchun e'lon yoki ijodiy post</p>
+                            </div>
+                        </div>
+                        <form onsubmit="handleCreatePost(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <input type="text" id="postTitleInput" required placeholder="Post sarlavhasi..." class="sm:col-span-2 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                                <select id="postCategoryInput" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
+                                    <option value="ART & Ijod">🎨 ART & Ijod</option>
+                                    <option value="E'lon">📢 Muhim E'lon</option>
+                                    <option value="Tadbir">🎉 Sinf Tadbiri</option>
+                                    <option value="Yutuqlar">🏆 Yutuqlarimiz</option>
+                                </select>
+                            </div>
+                            <textarea id="postBodyInput" rows="3" required placeholder="Post matnini yozing..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <label class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+                                        <i class="fa-solid fa-image text-indigo-600"></i>
+                                        <span>Rasm yuklash</span>
+                                        <input type="file" id="postImageFile" accept="image/*" class="hidden" onchange="previewPostImage(event)">
+                                    </label>
+                                    <input type="url" id="postImageUrl" placeholder="yoki rasm havolasi (URL)..." class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs w-48 focus:outline-none focus:border-indigo-500">
+                                </div>
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm shadow-md shadow-indigo-500/25 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> <span>Chop etish</span>
+                                </button>
+                            </div>
+                            <div id="postImgPreviewWrap" class="hidden relative w-full max-h-56 overflow-hidden rounded-2xl border border-slate-200">
+                                <img id="postImgPreview" src="" alt="Preview" class="w-full h-48 object-cover">
+                                <button type="button" onclick="clearPostImage()" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center text-xs hover:bg-black">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Posts Feed Container -->
+                    <div id="postsFeedList" class="space-y-6"></div>
+                </div>
+
+                <!-- Right Sidebar Column -->
+                <div class="space-y-6">
+                    <!-- Featured Sinf Rahbari Card -->
+                    <div class="bg-white/95 rounded-3xl p-6 border border-slate-200 shadow-xs relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-r from-violet-600 to-indigo-600"></div>
+                        <div class="relative pt-8 text-center">
+                            <div class="w-20 h-20 rounded-2xl bg-white p-1 mx-auto shadow-md mb-3">
+                                <div id="homeroomAvatarBox" class="w-full h-full rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white flex items-center justify-center font-extrabold text-2xl">
+                                    KJ
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-xs font-bold mb-2">
+                                <i class="fa-solid fa-palette"></i> Sinf Rahbari & ART Ustozi
+                            </span>
+                            <h3 class="text-lg font-extrabold text-slate-900">Kenjebaev Jambil</h3>
+                            <p class="text-xs text-slate-500 mt-1">Fanlar: ART va Kelajak soati</p>
+                            <p id="homeroomBioSidebar" class="text-xs text-slate-600 mt-3 bg-slate-50 p-3 rounded-2xl border border-slate-100 italic">
+                                "7-B sinf rahbari va ART fani o'qituvchisi."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Rating Mini-Leaderboard -->
+                    <div class="bg-white/95 rounded-3xl p-6 border border-slate-200 shadow-xs">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-crown text-amber-500"></i>
+                                <span>Top 5 Reyting</span>
+                            </h3>
+                            <button onclick="switchMainTab('students')" class="text-xs font-semibold text-indigo-600 hover:underline">Barchasi →</button>
+                        </div>
+                        <div id="miniLeaderboard" class="space-y-3"></div>
+                    </div>
+
+                    <!-- Quick Login Prompt if Guest -->
+                    <div id="guestSidebarPrompt" class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-lg">
+                        <h4 class="font-bold text-base mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-key text-amber-400"></i>
+                            <span>Tizimga kiring!</span>
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            O'z profilingizga rasm qo'shish, o'zingiz haqingizda ma'lumot yozish, izoh qoldirish yoki baho qo'yish uchun shaxsiy login va parol bilan kiring.
+                        </p>
+                        <button onclick="openLoginModal()" class="w-full py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 font-semibold text-sm transition shadow-md">
+                            Kirish (Login)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: STUDENTS & RATING ==================== -->
+        <section id="tab-students" class="tab-section hidden space-y-6">
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900">7-B Sinfi O'quvchilari va Reytingi</h2>
+                        <p class="text-sm text-slate-500">Ustozlar qo'ygan baholar asosida shakllanadigan jonli reyting jadvali (Boshlang'ich ball: 0)</p>
+                    </div>
+                    <div id="teacherGradeQuickBtnArea"></div>
+                </div>
+
+                <!-- Top 3 Podium Cards -->
+                <div id="podiumGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"></div>
+
+                <!-- Search & Sort Bar -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-6 border-b border-slate-100">
+                    <div class="relative flex-1 max-w-md">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="studentSearchInput" oninput="renderStudentsTab()" placeholder="Ism, familiya yoki otchestva bo'yicha qidirish..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-500">Saralash:</span>
+                        <select id="studentSortSelect" onchange="renderStudentsTab()" class="px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:border-indigo-500">
+                            <option value="number">🔢 Ro'yxat tartibi (1-24)</option>
+                            <option value="rating">🏆 Reyting bo'yicha (Yuqori)</option>
+                            <option value="name">🔤 Alifbo bo'yicha (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- All 24 Students Grid -->
+                <div id="allStudentsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pt-6"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: HOMEWORK ==================== -->
+        <section id="tab-homework" class="tab-section hidden space-y-6">
+            <div id="addHomeworkCard" class="hidden bg-white/95 rounded-3xl p-6 border border-emerald-200 shadow-md">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Yangi uyga vazifa berish</h3>
+                        <p class="text-xs text-slate-500">O'quvchilar uchun fan bo'yicha topshiriq qo'shish</p>
+                    </div>
+                </div>
+                <form onsubmit="handleAddHomework(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Fan nomi</label>
+                        <select id="hwSubjectInput" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Topshirish muddati</label>
+                        <input type="date" id="hwDeadlineInput" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Vazifa tavsifi (bet, mashq, mavzu)</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="hwTaskInput" required placeholder="Masalan: 45-bet, 12-15 misollarni yechish..." class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500">
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm shadow-md transition shrink-0">
+                                Qo'shish
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900">Uyga Vazifalar Ro'yxati</h2>
+                        <p class="text-sm text-slate-500">Barcha fanlardan berilgan dolzarb topshiriqlar</p>
+                    </div>
+                    <select id="hwFilterSubject" onchange="renderHomeworkTab()" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:border-indigo-500">
+                        <option value="ALL">📚 Barcha fanlar</option>
+                    </select>
+                </div>
+
+                <div id="homeworkListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: TIMETABLE (DARS JADVALI) ==================== -->
+        <section id="tab-schedule" class="tab-section hidden space-y-6">
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="inline-block text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-700 mb-2">Rasmiy Jadval</span>
+                        <h2 class="text-2xl font-extrabold text-slate-900">7-B Sinf Dars Jadvali</h2>
+                        <p class="text-sm text-slate-500">Dushanba — Juma • 1-8 soatlar (08:30 — 15:05)</p>
+                    </div>
+                    <div id="todayHighlightBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="todayDayLabel">Bugun: Chorshanba</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse min-w-[900px]">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3.5 px-3 font-extrabold text-center w-12">#</th>
+                                <th class="py-3.5 px-3 font-extrabold w-28">Vaqt</th>
+                                <th class="py-3.5 px-3 font-extrabold" data-col-day="1">Dushanba</th>
+                                <th class="py-3.5 px-3 font-extrabold" data-col-day="2">Seshanba</th>
+                                <th class="py-3.5 px-3 font-extrabold" data-col-day="3">Chorshanba</th>
+                                <th class="py-3.5 px-3 font-extrabold" data-col-day="4">Payshanba</th>
+                                <th class="py-3.5 px-3 font-extrabold" data-col-day="5">Juma</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fullTimetableBody" class="divide-y divide-slate-200 text-xs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: TEACHERS & SCHOOL INFO ==================== -->
+        <section id="tab-school" class="tab-section hidden space-y-6">
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="flex-1 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">
+                            <i class="fa-solid fa-building-columns"></i>
+                            <span>Maktab haqida ma'lumot</span>
+                        </div>
+                        <h2 id="schoolTitleDisplay" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                            Qo'ng'irot tumani Ixtisoslashtirilgan maktab-internati
+                        </h2>
+                        <p id="schoolDescDisplay" class="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line"></p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                                <div class="text-indigo-600 font-bold text-sm mb-1"><i class="fa-solid fa-flask mr-1.5"></i> Laboratoriyalar</div>
+                                <p class="text-xs text-slate-500">Fizika, Kimyo va Biologiya fanlari uchun zamonaviy jihozlangan amaliy xonalar.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                                <div class="text-emerald-600 font-bold text-sm mb-1"><i class="fa-solid fa-laptop-code mr-1.5"></i> IT & Robototexnika</div>
+                                <p class="text-xs text-slate-500">Yuqori tezlikdagi internet va zamonaviy kompyuterlar bilan ta'minlangan IT xonalari.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                                <div class="text-amber-600 font-bold text-sm mb-1"><i class="fa-solid fa-palette mr-1.5"></i> ART & Madaniyat</div>
+                                <p class="text-xs text-slate-500">O'quvchilarning estetik didi va ijodiy qobiliyatlarini rivojlantirish studiyasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All 20 Teachers Directory -->
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-extrabold text-slate-900">7-B Sinfi Ustozlari (20 nafar)</h3>
+                    <p class="text-sm text-slate-500">Sinfimizga dars beruvchi barcha malakali o'qituvchilar ro'yxati</p>
+                </div>
+                <div id="teachersDirectoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: PERSONAL PROFILE ==================== -->
+        <section id="tab-profile" class="tab-section hidden space-y-6">
+            <div id="personalProfileContainer" class="max-w-3xl mx-auto bg-white/95 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs"></div>
+        </section>
+
+        <!-- ==================== TAB 7: ADMIN PANEL ==================== -->
+        <section id="tab-admin" class="tab-section hidden space-y-6">
+            <div class="bg-white/95 rounded-3xl p-6 sm:p-8 border border-rose-200 shadow-xs space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-bold mb-2">
+                            <i class="fa-solid fa-shield-halved"></i> Boshqaruv Markazi
+                        </span>
+                        <h2 class="text-2xl font-extrabold text-slate-900">Admin Panel — Foydalanuvchilar, Fon va Maktab Boshqaruvi</h2>
+                        <p class="text-sm text-slate-500">Har bir o'quvchi va ustozning shaxsiy login/parolini boshqarish, Yordamchi Admin tayinlash hamda maktab fonini qo'shish</p>
+                    </div>
+                    <button onclick="resetAllPortalData()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-700 text-xs font-bold transition self-start">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Barchasini 0 ga qaytarish
+                    </button>
+                </div>
+
+                <!-- School Background Image Customization -->
+                <div class="bg-indigo-50/60 rounded-2xl p-5 border border-indigo-200/80 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-image text-indigo-600"></i>
+                                <span>Sayt orqa foniga Maktab rasmini qo'shish</span>
+                            </h3>
+                            <p class="text-xs text-slate-500">Kompyuter/telefondan rasm yuklang yoki rasm havolasini (URL) kiriting</p>
+                        </div>
+                        <button onclick="removeSchoolBackground()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-50 text-rose-600 border border-slate-200 text-xs font-bold transition self-start">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Fonni olib tashlash
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
+                        <label class="cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition">
+                            <i class="fa-solid fa-upload"></i>
+                            <span>Maktab rasmini yuklash</span>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleSchoolBgUpload(event)">
+                        </label>
+                        <div class="sm:col-span-2 flex gap-2">
+                            <input type="url" id="adminBgUrlInput" placeholder="Yoki rasm havolasini (URL) kiriting..." class="flex-1 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500">
+                            <button onclick="applySchoolBgUrl()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition">Qo'llash</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-semibold text-slate-600 whitespace-nowrap">Fon yorqinligi (oq parda):</span>
+                        <input type="range" id="adminBgOpacityInput" min="20" max="95" value="82" oninput="updateSchoolBgStyle()" class="w-full max-w-xs accent-indigo-600">
+                        <span id="adminBgOpacityLabel" class="text-xs font-bold text-indigo-700">82%</span>
+                    </div>
+                </div>
+
+                <!-- Edit School Info Form -->
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+                    <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-school text-indigo-600"></i>
+                        <span>Maktab haqida ma'lumotni tahrirlash</span>
+                    </h3>
+                    <input type="text" id="adminSchoolTitleInput" class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500">
+                    <textarea id="adminSchoolDescInput" rows="3" class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                    <div class="flex justify-end">
+                        <button onclick="saveAdminSchoolInfo()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-xl text-xs shadow-sm transition">
+                            Maktab ma'lumotini saqlash
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Users Management Filter -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                    <div class="relative flex-1 max-w-md">
+                        <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="adminUserSearch" oninput="renderAdminUsersTable()" placeholder="Foydalanuvchi ismi yoki loginini qidirish..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <select id="adminRoleFilter" onchange="renderAdminUsersTable()" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
+                        <option value="ALL">Barcha foydalanuvchilar (44)</option>
+                        <option value="student">O'quvchilar (24)</option>
+                        <option value="teacher">Ustozlar va Sinf rahbari (20)</option>
+                        <option value="admins">Admin va Yordamchi Adminlar</option>
+                    </select>
+                </div>
+
+                <!-- Users Management Table -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse min-w-[820px]">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4 font-bold">F.I.O (To'liq ism)</th>
+                                <th class="py-3 px-4 font-bold">Toifa</th>
+                                <th class="py-3 px-4 font-bold">Login</th>
+                                <th class="py-3 px-4 font-bold">Shaxsiy Parol</th>
+                                <th class="py-3 px-4 font-bold">Rol / Huquq</th>
+                                <th class="py-3 px-4 font-bold text-right">Saqlash</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersTableBody" class="divide-y divide-slate-200 text-xs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-white/95 border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2 font-semibold text-slate-700">
+                <span class="w-6 h-6 rounded-lg hero-bg text-white flex items-center justify-center font-bold text-[10px]">7B</span>
+                <span>7-B Sinfi Rasmiy Maktab Portali • Qo'ng'irot tumani</span>
+            </div>
+            <div>Bosh Admin: <strong class="text-slate-700">Rametullayev Sayidbek</strong> • Sinf Rahbari: <strong class="text-slate-700">Kenjebaev Jambil (ART)</strong></div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- 1. LOGIN MODAL -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 relative">
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 rounded-2xl hero-bg text-white flex items-center justify-center font-extrabold text-xl shadow-md">7-B</div>
+                <div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Portalga Kirish</h3>
+                    <p class="text-xs text-slate-500">Shaxsiy login va maxfiy parolingizni kiriting</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Login</label>
+                    <input type="text" id="loginUsernameInput" required placeholder="Loginingizni kiriting..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Parol</label>
+                    <input type="password" id="loginPasswordInput" required placeholder="••••••••" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-500/30 transition">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i> Tizimga kirish
+                </button>
+            </form>
+            <p class="text-[11px] text-slate-400 text-center mt-4">
+                Har bir o'quvchi va ustoz uchun alohida parol belgilangan. Parolni unutgan bo'lsangiz, Bosh Admin (Sayidbek) ga murojaat qiling.
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. STUDENT PROFILE & GRADES DETAIL MODAL -->
+    <div id="studentDetailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 my-8 relative">
+            <button onclick="closeStudentDetailModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="studentDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- 3. GRADE / RATING MODAL -->
+    <div id="gradeModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200 relative">
+            <button onclick="closeGradeModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-slate-900">Baho va Reyting Qo'yish</h3>
+                    <p class="text-xs text-slate-500">O'quvchining reyting balini oshirish</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleGradeSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">O'quvchi</label>
+                    <select id="gradeStudentSelect" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Fan</label>
+                        <select id="gradeSubjectSelect" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Baho / Ball</label>
+                        <select id="gradePointsSelect" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-indigo-700 focus:outline-none focus:border-indigo-500">
+                            <option value="5">5 (A'lo) — +5 ball</option>
+                            <option value="4">4 (Yaxshi) — +4 ball</option>
+                            <option value="3">3 (Qoniqarli) — +3 ball</option>
+                            <option value="10">🏆 Olimpiada / Faollik — +10 ball</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Izoh (ixtiyoriy)</label>
+                    <input type="text" id="gradeCommentInput" placeholder="Masalan: Doskada a'lo javob berdi!" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition">
+                    Bahoni saqlash
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT DATA & LOGIC ==================== -->
+    <script>
+        const STORAGE_KEY = 'qongirot_7b_portal_gh_v1';
+
+        // 1. INITIAL CLEAN SEED DATA (Unique password for EVERY person, 0 ratings, 0 posts, 0 homework)
+        const INITIAL_TEACHERS = [
+            { id: 't_jambil', fullName: 'Kenjebaev Jambil', subject: 'ART / Kelajak soati', login: 'jambil', password: 'art#901', role: 'homeroom_teacher', bio: "7-B sinf rahbari va ART fani o'qituvchisi.", avatar: '' },
+            { id: 't_atabek', fullName: 'Toremuratov Atabek', subject: 'Fizika', login: 'atabek', password: 'fiz#412', role: 'teacher', bio: "Fizika fani o'qituvchisi.", avatar: '' },
+            { id: 't_paxratdin', fullName: 'Jalgasov Paxratdin', subject: 'Fizika', login: 'paxratdin', password: 'fiz#738', role: 'teacher', bio: "Fizika fani o'qituvchisi.", avatar: '' },
+            { id: 't_sevara', fullName: 'Tangriberganova Sevara', subject: "O'zbek-tili", login: 'sevara', password: 'uzb#519', role: 'teacher', bio: "O'zbek tili va adabiyoti fani o'qituvchisi.", avatar: '' },
+            { id: 't_raxim', fullName: 'Eshmuratov Raxim', subject: 'Matematika', login: 'raxim', password: 'mat#824', role: 'teacher', bio: "Matematika fani o'qituvchisi.", avatar: '' },
+            { id: 't_kamal', fullName: 'Kutibaev Kamal', subject: 'Matematika', login: 'kamal', password: 'mat#365', role: 'teacher', bio: "Matematika fani o'qituvchisi.", avatar: '' },
+            { id: 't_indira', fullName: 'Kalbaeva Indira', subject: 'Geografiya', login: 'indira', password: 'geo#641', role: 'teacher', bio: "Geografiya fani o'qituvchisi.", avatar: '' },
+            { id: 't_asqar', fullName: 'Jumagaliev Asqar', subject: 'Tariyx', login: 'asqar', password: 'tar#297', role: 'teacher', bio: "Tarix fani o'qituvchisi.", avatar: '' },
+            { id: 't_asadbek', fullName: 'Utegenov Asadbek', subject: 'Texnologiya / Informatika', login: 'asadbek', password: 'tex#953', role: 'teacher', bio: "Texnologiya va Informatika fani o'qituvchisi.", avatar: '' },
+            { id: 't_nilufar', fullName: 'Babadjanova Nilufar', subject: 'Shet-tili', login: 'nilufar', password: 'eng#184', role: 'teacher', bio: "Ingliz tili fani o'qituvchisi.", avatar: '' },
+            { id: 't_shafiqa', fullName: 'Salaeva Shafiqa', subject: 'Shet-tili', login: 'shafiqa', password: 'eng#672', role: 'teacher', bio: "Ingliz tili fani o'qituvchisi.", avatar: '' },
+            { id: 't_kuatbai', fullName: 'Jarekeev Kuatbai', subject: 'Qaraqalpaq-tili', login: 'kuatbai', password: 'qrq#408', role: 'teacher', bio: "Qoraqalpoq tili va adabiyoti fani o'qituvchisi.", avatar: '' },
+            { id: 't_guljaxan_qq', fullName: 'Rzamuratova Guljaxan', subject: 'Qaraqalpaq-tili', login: 'guljaxan_qq', password: 'qrq#892', role: 'teacher', bio: "Qoraqalpoq tili fani o'qituvchisi.", avatar: '' },
+            { id: 't_manzura', fullName: 'Ismailova Manzura', subject: 'Dene tarbiya', login: 'manzura', password: 'spo#531', role: 'teacher', bio: "Jismoniy tarbiya fani o'qituvchisi.", avatar: '' },
+            { id: 't_guljaxan_bio', fullName: 'Nazarbaeva Guljaxan', subject: 'Biologiya', login: 'guljaxan_bio', password: 'bio#714', role: 'teacher', bio: "Biologiya fani o'qituvchisi.", avatar: '' },
+            { id: 't_rustem', fullName: 'Aybergenov Rustem', subject: 'Ximiya', login: 'rustem', password: 'xim#269', role: 'teacher', bio: "Kimyo fani o'qituvchisi.", avatar: '' },
+            { id: 't_turlan', fullName: 'Sabitov Turlan', subject: 'Informatika', login: 'turlan', password: 'inf#946', role: 'teacher', bio: "Informatika va axborot texnologiyalari fani o'qituvchisi.", avatar: '' },
+            { id: 't_gulmira', fullName: "Djalg'asbaeva Gulmira", subject: 'Tarbiya', login: 'gulmira', password: 'trb#382', role: 'teacher', bio: "Tarbiya fani o'qituvchisi.", avatar: '' },
+            { id: 't_dilbar', fullName: 'Djumamuratova Dilbar', subject: 'Rus-tili', login: 'dilbar', password: 'rus#615', role: 'teacher', bio: "Rus tili fani o'qituvchisi.", avatar: '' },
+            { id: 't_temurbek', fullName: 'Xudaynazarov Temurbek', subject: 'Rus-tili', login: 'temurbek', password: 'rus#847', role: 'teacher', bio: "Rus tili fani o'qituvchisi.", avatar: '' }
+        ];
+
+        const INITIAL_STUDENTS = [
+            { id: 's_1', num: 1, fullName: 'Abdiualitov Rasul Yusupbek uli', birthday: '31.03.2014', login: 'rasul', password: 'rsl#3104', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_2', num: 2, fullName: 'Akbarova Asal Anvarovna', birthday: '13.10.2013', login: 'asal_a', password: 'asl#1310', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_3', num: 3, fullName: 'Djoldasbayev Jamshid Ikramjanovich', birthday: '27.07.2013', login: 'jamshid', password: 'jmsh#2707', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_4', num: 4, fullName: 'Gulmurzayeva Mirzagul Jalgasbaevna', birthday: '16.02.2013', login: 'mirzagul', password: 'mrz#1602', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_5', num: 5, fullName: 'Jaksilikov Farrux Furkat uli', birthday: '19.05.2013', login: 'farrux', password: 'frx#1905', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_6', num: 6, fullName: 'Jalgashova Asal Klichbay qizi', birthday: '10.08.2013', login: 'asal_j', password: 'asj#1008', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_7', num: 7, fullName: "Aytbayev Abrorbek Nurfat o‘g‘li", birthday: '05.10.2013', login: 'abrorbek', password: 'abr#0510', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_8', num: 8, fullName: 'Jubandikov Sardor Gaybulla uli', birthday: '31.10.2013', login: 'sardor', password: 'srd#3110', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_9', num: 9, fullName: 'Kamiljanova Mohinur Zakirjon qizi', birthday: '02.04.2014', login: 'mohinur', password: 'mhn#0204', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_10', num: 10, fullName: 'Utemuratova Umida Baxtibay qizi', birthday: '14.04.2013', login: 'umida', password: 'umd#1404', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_11', num: 11, fullName: 'Kumekbayev Bekzod Uktam uli', birthday: '08.11.2013', login: 'bekzod', password: 'bkz#0811', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_12', num: 12, fullName: 'Oralbayev Elnur Sulayman uli', birthday: '19.11.2013', login: 'elnur', password: 'eln#1911', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_13', num: 13, fullName: 'Rametullayev Sayidbek Alisherovich', birthday: '23.10.2013', login: 'sayidbek', password: 'admin7b', role: 'super_admin', rating: 0, bio: "7-B sinf portali yaratuvchisi va Bosh Admin.", avatar: '', grades: [] },
+            { id: 's_14', num: 14, fullName: 'Sanetullayev Islambek Kudaybergen uli', birthday: '05.08.2013', login: 'islambek', password: 'isl#0508', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_15', num: 15, fullName: 'Tengelbayev Sunnatillo Shuxrat uli', birthday: '20.11.2013', login: 'sunnatillo', password: 'snn#2011', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_16', num: 16, fullName: 'Yembergenov Jasurbek Turganbek uli', birthday: '15.10.2013', login: 'jasurbek_y', password: 'jsy#1510', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_17', num: 17, fullName: 'Yenibayev Bunyodbek Davron uli', birthday: '18.09.2013', login: 'bunyodbek', password: 'bny#1809', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_18', num: 18, fullName: 'Polatov Jahongir Shuxratovich', birthday: '05.10.2013', login: 'jahongir', password: 'jhg#0510', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_19', num: 19, fullName: 'Jumabayeva Intizar Farxadovna', birthday: '09.02.2014', login: 'intizar', password: 'int#0902', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_20', num: 20, fullName: 'Torebayev Javohir Baxatovich', birthday: '12.01.2014', login: 'javohir', password: 'jvh#1201', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_21', num: 21, fullName: 'Aziev Jandarbek Janibekovich', birthday: '28.04.2013', login: 'jandarbek', password: 'jnd#2804', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_22', num: 22, fullName: 'Kongratbayev Maqset Turdibay uli', birthday: '19.02.2013', login: 'maqset', password: 'mqs#1902', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_23', num: 23, fullName: 'Artikbaeva Jasmina Bauirjanovna', birthday: '10.02.2013', login: 'jasmina', password: 'jsm#1002', role: 'student', rating: 0, bio: "", avatar: '', grades: [] },
+            { id: 's_24', num: 24, fullName: "Ermakbaev Jasurbek Gafurjon o'g'li", birthday: '12.01.2014', login: 'jasurbek_e', password: 'jse#1201', role: 'student', rating: 0, bio: "", avatar: '', grades: [] }
+        ];
+
+        const TIMETABLE_ROWS = [
+            {
+                num: 1, time: '08:30-09:15',
+                days: [
+                    { subject: 'Kelajak soati', teachers: 'Kenjebaev Jambil', bg: 'bg-indigo-200/80 border-indigo-300 text-indigo-950' },
+                    { subject: 'Fizika', teachers: 'Toremuratov Atabek | Jalgasov Paxratdin', bg: 'bg-emerald-200/80 border-emerald-300 text-emerald-950' },
+                    { subject: "O'zbek-tili", teachers: 'Tangriberganova Sevara', bg: 'bg-lime-200/80 border-lime-300 text-lime-950' },
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: "O'zbek-tili", teachers: 'Tangriberganova Sevara', bg: 'bg-lime-200/80 border-lime-300 text-lime-950' }
+                ]
+            },
+            {
+                num: 2, time: '9:20-10:05',
+                days: [
+                    { subject: 'Geografiya', teachers: 'Kalbaeva Indira', bg: 'bg-teal-200/80 border-teal-300 text-teal-950' },
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: 'Tariyx', teachers: 'Jumagaliev Asqar', bg: 'bg-sky-200/80 border-sky-300 text-sky-950' },
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: 'Texnologiya', teachers: 'Utegenov Asadbek', bg: 'bg-fuchsia-200/80 border-fuchsia-300 text-fuchsia-950' }
+                ]
+            },
+            {
+                num: 3, time: '10:10-10:55',
+                days: [
+                    { subject: 'Shet-tili', teachers: 'Babadjanova Nilufar | Salaeva Shafiqa', bg: 'bg-purple-200/80 border-purple-300 text-purple-950' },
+                    { subject: 'Qaraqalpaq-tili', teachers: 'Jarekeev Kuatbai | Rzamuratova Guljaxan', bg: 'bg-amber-200/80 border-amber-300 text-amber-950' },
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: 'Tariyx', teachers: 'Jumagaliev Asqar', bg: 'bg-sky-200/80 border-sky-300 text-sky-950' },
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' }
+                ]
+            },
+            {
+                num: 4, time: '11:00-11:45',
+                days: [
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: 'ART', teachers: 'Kenjebaev Jambil', bg: 'bg-violet-300/90 border-violet-400 text-violet-950 ring-2 ring-violet-400/50' },
+                    { subject: 'Shet-tili', teachers: 'Babadjanova Nilufar | Salaeva Shafiqa', bg: 'bg-purple-200/80 border-purple-300 text-purple-950' },
+                    { subject: 'Fizika', teachers: 'Toremuratov Atabek | Jalgasov Paxratdin', bg: 'bg-emerald-200/80 border-emerald-300 text-emerald-950' },
+                    { subject: 'Dene tarbiya', teachers: 'Ismailova Manzura', bg: 'bg-cyan-200/80 border-cyan-300 text-cyan-950' }
+                ]
+            },
+            {
+                num: 5, time: '11:50-12:35',
+                days: [
+                    { subject: 'Biologiya', teachers: 'Nazarbaeva Guljaxan', bg: 'bg-blue-200/80 border-blue-300 text-blue-950' },
+                    { subject: 'Shet-tili', teachers: 'Babadjanova Nilufar | Salaeva Shafiqa', bg: 'bg-purple-200/80 border-purple-300 text-purple-950' },
+                    { subject: 'Ximiya', teachers: 'Aybergenov Rustem', bg: 'bg-teal-200/80 border-teal-300 text-teal-950' },
+                    { subject: 'Tariyx', teachers: 'Jumagaliev Asqar', bg: 'bg-sky-200/80 border-sky-300 text-sky-950' },
+                    { subject: 'Informatika', teachers: 'Sabitov Turlan | Utegenov Asadbek', bg: 'bg-indigo-200/80 border-indigo-300 text-indigo-950' }
+                ]
+            },
+            {
+                num: 6, time: '12:40-13:25',
+                days: [null, null, null, null, null]
+            },
+            {
+                num: 7, time: '13:30-14:15',
+                days: [
+                    { subject: 'Matematika', teachers: 'Eshmuratov Raxim | Kutibaev Kamal', bg: 'bg-pink-200/80 border-pink-300 text-pink-950' },
+                    { subject: 'Fizika', teachers: 'Toremuratov Atabek | Jalgasov Paxratdin', bg: 'bg-emerald-200/80 border-emerald-300 text-emerald-950' },
+                    { subject: 'Biologiya', teachers: 'Nazarbaeva Guljaxan', bg: 'bg-blue-200/80 border-blue-300 text-blue-950' },
+                    { subject: 'Tarbiya', teachers: "Djalg'asbaeva Gulmira", bg: 'bg-rose-200/80 border-rose-300 text-rose-950' },
+                    { subject: 'Shet-tili', teachers: 'Babadjanova Nilufar | Salaeva Shafiqa', bg: 'bg-purple-200/80 border-purple-300 text-purple-950' }
+                ]
+            },
+            {
+                num: 8, time: '14:20-15:05',
+                days: [
+                    { subject: "O'zbek-tili", teachers: 'Tangriberganova Sevara', bg: 'bg-lime-200/80 border-lime-300 text-lime-950' },
+                    { subject: 'Rus-tili', teachers: 'Djumamuratova Dilbar | Xudaynazarov Temurbek', bg: 'bg-green-200/80 border-green-300 text-green-950' },
+                    { subject: "O'zbek-tili", teachers: 'Tangriberganova Sevara', bg: 'bg-lime-200/80 border-lime-300 text-lime-950' },
+                    { subject: 'Dene tarbiya', teachers: 'Ismailova Manzura', bg: 'bg-cyan-200/80 border-cyan-300 text-cyan-950' },
+                    null
+                ]
+            }
+        ];
+
+        // 2. CLEAN APPLICATION STATE
+        let appState = {
+            currentUserId: null,
+            students: [],
+            teachers: [],
+            posts: [],
+            homework: [],
+            schoolBackground: {
+                image: '',
+                opacity: 82
+            },
+            schoolInfo: {
+                title: "Qo'ng'irot tumani Ixtisoslashtirilgan maktab-internati",
+                description: "Qo'ng'irot tumani Ixtisoslashtirilgan maktab-internati o'quvchilarga aniq va tabiiy fanlar, xorijiy tillar hamda zamonaviy axborot texnologiyalarini chuqurlashtirilgan holda o'rgatishga ixtisoslasgan zamonaviy ta'lim maskanidir.\n\n7-B sinfi — aniq fanlar yo'nalishida tahsil oluvchi eng faol va iqtidorli sinflardan biri bo'lib, sinfimiz o'quvchilari matematika, fizika, informatika va ingliz tili fanlaridan tuman hamda respublika olimpiadalarida munosib ishtirok etib kelmoqda."
+            }
+        };
+
+        let pendingPostImageBase64 = '';
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    appState = JSON.parse(raw);
+                    if (!appState.schoolBackground) {
+                        appState.schoolBackground = { image: '', opacity: 82 };
+                    }
+                } else {
+                    appState.students = JSON.parse(JSON.stringify(INITIAL_STUDENTS));
+                    appState.teachers = JSON.parse(JSON.stringify(INITIAL_TEACHERS));
+                    appState.posts = [];
+                    appState.homework = [];
+                    saveState();
+                }
+            } catch (e) {
+                console.error("State yuklashda xatolik:", e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                showToast("Xotira to'lib qoldi! Kichikroq rasm yuklang.", "error");
+            }
+        }
+
+        function resetAllPortalData() {
+            localStorage.removeItem(STORAGE_KEY);
+            appState.currentUserId = null;
+            appState.students = JSON.parse(JSON.stringify(INITIAL_STUDENTS));
+            appState.teachers = JSON.parse(JSON.stringify(INITIAL_TEACHERS));
+            appState.posts = [];
+            appState.homework = [];
+            appState.schoolBackground = { image: '', opacity: 82 };
+            saveState();
+            window.applySchoolBackgroundToPage();
+            refreshEntireUI();
+            switchMainTab('feed');
+            showToast("Barcha postlar, uyga vazifalar va reytinglar 0 ga qaytarildi!", "info");
+        }
+
+        // 3. SCHOOL BACKGROUND MANAGEMENT
+        window.applySchoolBackgroundToPage = function() {
+            const overlay = document.getElementById('schoolBgOverlay');
+            const bg = appState.schoolBackground || { image: '', opacity: 82 };
+            if (bg.image) {
+                document.body.style.backgroundImage = `url('${bg.image}')`;
+                if (overlay) {
+                    overlay.style.display = 'block';
+                    overlay.style.background = `rgba(248, 250, 252, ${bg.opacity / 100})`;
+                }
+            } else {
+                document.body.style.backgroundImage = '';
+                if (overlay) overlay.style.display = 'none';
+            }
+            const slider = document.getElementById('adminBgOpacityInput');
+            const label = document.getElementById('adminBgOpacityLabel');
+            if (slider) slider.value = bg.opacity;
+            if (label) label.innerText = `${bg.opacity}%`;
+        };
+
+        window.updateSchoolBgStyle = function() {
+            const slider = document.getElementById('adminBgOpacityInput');
+            const label = document.getElementById('adminBgOpacityLabel');
+            if (!slider) return;
+            const val = parseInt(slider.value, 10) || 82;
+            if (label) label.innerText = `${val}%`;
+            if (!appState.schoolBackground) appState.schoolBackground = { image: '', opacity: val };
+            appState.schoolBackground.opacity = val;
+            saveState();
+            window.applySchoolBackgroundToPage();
+        };
+
+        window.handleSchoolBgUpload = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                appState.schoolBackground.image = evt.target.result;
+                saveState();
+                window.applySchoolBackgroundToPage();
+                showToast("Maktab fon rasmi o'rnatildi!", "success");
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.applySchoolBgUrl = function() {
+            const input = document.getElementById('adminBgUrlInput');
+            const url = input ? input.value.trim() : '';
+            if (!url) {
+                showToast("Rasm havolasini kiriting!", "error");
+                return;
+            }
+            appState.schoolBackground.image = url;
+            saveState();
+            window.applySchoolBackgroundToPage();
+            showToast("Maktab fon rasmi qo'llandi!", "success");
+        };
+
+        window.removeSchoolBackground = function() {
+            appState.schoolBackground.image = '';
+            saveState();
+            window.applySchoolBackgroundToPage();
+            showToast("Fon rasmi olib tashlandi.", "info");
+        };
+
+        // 4. USER & ROLE HELPERS
+        function getAllUsers() {
+            return [
+                ...appState.students.map(s => ({ ...s, userType: 'student' })),
+                ...appState.teachers.map(t => ({ ...t, userType: 'teacher' }))
+            ];
+        }
+
+        function getCurrentUser() {
+            if (!appState.currentUserId) return null;
+            return getAllUsers().find(u => u.id === appState.currentUserId) || null;
+        }
+
+        function isAdmin(user) {
+            return user && (user.role === 'super_admin' || user.role === 'assistant_admin');
+        }
+
+        function canPost(user) {
+            return user && (user.role === 'homeroom_teacher' || user.role === 'super_admin' || user.role === 'assistant_admin');
+        }
+
+        function canGradeOrAssign(user) {
+            return user && (user.role === 'teacher' || user.role === 'homeroom_teacher' || user.role === 'super_admin' || user.role === 'assistant_admin');
+        }
+
+        function getRoleBadgeHTML(role) {
+            switch (role) {
+                case 'super_admin':
+                    return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700"><i class="fa-solid fa-crown text-[10px]"></i> Bosh Admin</span>`;
+                case 'assistant_admin':
+                    return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800"><i class="fa-solid fa-shield text-[10px]"></i> Yordamchi Admin</span>`;
+                case 'homeroom_teacher':
+                    return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-violet-100 text-violet-700"><i class="fa-solid fa-palette text-[10px]"></i> Sinf Rahbari</span>`;
+                case 'teacher':
+                    return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700"><i class="fa-solid fa-chalkboard-user text-[10px]"></i> Ustoz</span>`;
+                default:
+                    return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-700"><i class="fa-solid fa-user-graduate text-[10px]"></i> O'quvchi</span>`;
+            }
+        }
+
+        function getInitials(name) {
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+            return name.slice(0, 2).toUpperCase();
+        }
+
+        function renderAvatar(user, sizeClasses = "w-10 h-10 text-sm") {
+            if (user.avatar) {
+                return `<img src="${user.avatar}" alt="${user.fullName}" class="${sizeClasses} rounded-2xl object-cover border border-slate-200 shrink-0">`;
+            }
+            const gradients = [
+                'from-indigo-500 to-blue-600',
+                'from-violet-500 to-purple-600',
+                'from-emerald-500 to-teal-600',
+                'from-amber-500 to-orange-600',
+                'from-rose-500 to-pink-600',
+                'from-cyan-500 to-sky-600'
+            ];
+            const colorIdx = user.fullName.length % gradients.length;
+            return `<div class="${sizeClasses} rounded-2xl bg-gradient-to-br ${gradients[colorIdx]} text-white font-extrabold flex items-center justify-center shrink-0 shadow-xs">${getInitials(user.fullName)}</div>`;
+        }
+
+        // 5. TOAST NOTIFICATIONS
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const styles = {
+                success: 'bg-slate-900 text-white border-emerald-500',
+                error: 'bg-rose-600 text-white border-rose-300',
+                info: 'bg-indigo-600 text-white border-indigo-300'
+            };
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-exclamation text-white',
+                info: 'fa-circle-info text-indigo-200'
+            };
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border-l-4 text-xs sm:text-sm font-semibold transition-all duration-300 transform translate-y-2 opacity-0 ${styles[type] || styles.success}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success} text-base"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        // 6. AUTHENTICATION LOGIC
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const loginVal = document.getElementById('loginUsernameInput').value.trim().toLowerCase();
+            const passVal = document.getElementById('loginPasswordInput').value.trim();
+
+            const found = getAllUsers().find(u => u.login.toLowerCase() === loginVal && u.password === passVal);
+            if (!found) {
+                showToast("Login yoki parol noto'g'ri!", "error");
+                return;
+            }
+
+            appState.currentUserId = found.id;
+            saveState();
+            closeLoginModal();
+            document.getElementById('loginUsernameInput').value = '';
+            document.getElementById('loginPasswordInput').value = '';
+            refreshEntireUI();
+            showToast(`Xush kelibsiz, ${found.fullName}!`, "success");
+        }
+
+        function handleLogout() {
+            appState.currentUserId = null;
+            saveState();
+            switchMainTab('feed');
+            refreshEntireUI();
+            showToast("Tizimdan chiqdingiz.", "info");
+        }
+
+        // 7. NAVIGATION & HEADER RENDER
+        function switchMainTab(tabName) {
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById(`tab-${tabName}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.remove('tab-inactive');
+                    btn.classList.add('tab-active');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                }
+            });
+
+            if (tabName === 'students') renderStudentsTab();
+            if (tabName === 'homework') renderHomeworkTab();
+            if (tabName === 'schedule') renderScheduleTab();
+            if (tabName === 'school') renderSchoolTab();
+            if (tabName === 'profile') renderProfileTab();
+            if (tabName === 'admin') renderAdminTab();
+        }
+
+        function renderHeaderAuth() {
+            const area = document.getElementById('authHeaderArea');
+            const user = getCurrentUser();
+
+            const profileTabBtn = document.getElementById('navTabProfile');
+            const adminTabBtn = document.getElementById('navTabAdmin');
+            const createPostCard = document.getElementById('createPostCard');
+            const guestPrompt = document.getElementById('guestSidebarPrompt');
+
+            if (!user) {
+                profileTabBtn.classList.add('hidden');
+                adminTabBtn.classList.add('hidden');
+                createPostCard.classList.add('hidden');
+                if (guestPrompt) guestPrompt.classList.remove('hidden');
+
+                area.innerHTML = `
+                    <button onclick="openLoginModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md shadow-indigo-500/25 transition flex items-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Kirish</span>
+                    </button>
+                `;
+                return;
+            }
+
+            profileTabBtn.classList.remove('hidden');
+            if (guestPrompt) guestPrompt.classList.add('hidden');
+
+            if (isAdmin(user)) {
+                adminTabBtn.classList.remove('hidden');
+            } else {
+                adminTabBtn.classList.add('hidden');
+            }
+
+            if (canPost(user)) {
+                createPostCard.classList.remove('hidden');
+            } else {
+                createPostCard.classList.add('hidden');
+            }
+
+            area.innerHTML = `
+                <div onclick="switchMainTab('profile')" class="flex items-center gap-2.5 bg-slate-100 hover:bg-slate-200/70 px-3 py-1.5 rounded-2xl cursor-pointer transition">
+                    ${renderAvatar(user, "w-8 h-8 text-xs")}
+                    <div class="hidden sm:block text-left">
+                        <div class="text-xs font-extrabold text-slate-900 leading-tight max-w-[160px] truncate">${user.fullName}</div>
+                        <div class="mt-0.5">${getRoleBadgeHTML(user.role)}</div>
+                    </div>
+                </div>
+                <button onclick="handleLogout()" title="Chiqish" class="px-3 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="hidden md:inline">Chiqish</span>
+                </button>
+            `;
+        }
+
+        // 8. FEED & POSTS LOGIC
+        function previewPostImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                pendingPostImageBase64 = evt.target.result;
+                document.getElementById('postImgPreview').src = pendingPostImageBase64;
+                document.getElementById('postImgPreviewWrap').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearPostImage() {
+            pendingPostImageBase64 = '';
+            document.getElementById('postImageFile').value = '';
+            document.getElementById('postImageUrl').value = '';
+            document.getElementById('postImgPreviewWrap').classList.add('hidden');
+        }
+
+        function handleCreatePost(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            if (!canPost(user)) {
+                showToast("Faqat Sinf Rahbari va Adminlar post joylay oladi!", "error");
+                return;
+            }
+
+            const title = document.getElementById('postTitleInput').value.trim();
+            const category = document.getElementById('postCategoryInput').value;
+            const body = document.getElementById('postBodyInput').value.trim();
+            const urlImg = document.getElementById('postImageUrl').value.trim();
+            const finalImg = pendingPostImageBase64 || urlImg;
+
+            const now = new Date();
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()} • ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const roleLabel = user.role === 'homeroom_teacher' ? 'Sinf Rahbari • ART Ustozi' : (user.role === 'super_admin' ? 'Bosh Admin' : 'Yordamchi Admin');
+
+            appState.posts.unshift({
+                id: 'p_' + Date.now(),
+                authorId: user.id,
+                authorName: user.fullName,
+                authorRoleLabel: roleLabel,
+                category,
+                title,
+                body,
+                image: finalImg,
+                date: dateStr,
+                likes: [],
+                comments: []
+            });
+
+            saveState();
+            e.target.reset();
+            clearPostImage();
+            renderPostsFeed();
+            showToast("Yangi post muvaffaqiyatli chop etildi!", "success");
+        }
+
+        function toggleLikePost(postId) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast("Like bosish uchun avval tizimga kiring!", "info");
+                openLoginModal();
+                return;
+            }
+            const post = appState.posts.find(p => p.id === postId);
+            if (!post) return;
+            const idx = post.likes.indexOf(user.id);
+            if (idx === -1) post.likes.push(user.id);
+            else post.likes.splice(idx, 1);
+            saveState();
+            renderPostsFeed();
+        }
+
+        function handleAddComment(e, postId) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            if (!user) {
+                showToast("Izoh yozish uchun tizimga kiring!", "info");
+                openLoginModal();
+                return;
+            }
+            const input = document.getElementById(`commentInput_${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const post = appState.posts.find(p => p.id === postId);
+            if (!post) return;
+
+            const now = new Date();
+            const timeStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')} • ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            post.comments.push({
+                author: user.fullName,
+                text,
+                time: timeStr
+            });
+            saveState();
+            renderPostsFeed();
+            showToast("Izohingiz qo'shildi!", "success");
+        }
+
+        function deletePost(postId) {
+            const user = getCurrentUser();
+            if (!isAdmin(user)) return;
+            appState.posts = appState.posts.filter(p => p.id !== postId);
+            saveState();
+            renderPostsFeed();
+            showToast("Post o'chirildi.", "info");
+        }
+
+        function renderPostsFeed() {
+            const container = document.getElementById('postsFeedList');
+            const user = getCurrentUser();
+            document.getElementById('heroPostCount').innerText = appState.posts.length;
+
+            const jambil = appState.teachers.find(t => t.id === 't_jambil');
+            if (jambil) {
+                const avatarBox = document.getElementById('homeroomAvatarBox');
+                if (jambil.avatar) {
+                    avatarBox.outerHTML = `<img id="homeroomAvatarBox" src="${jambil.avatar}" class="w-full h-full rounded-xl object-cover">`;
+                }
+                if (jambil.bio) {
+                    document.getElementById('homeroomBioSidebar').innerText = `"${jambil.bio}"`;
+                }
+            }
+
+            if (appState.posts.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white/95 rounded-3xl p-10 text-center border border-slate-200 space-y-2">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto text-xl">
+                            <i class="fa-regular fa-newspaper"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">Hozircha postlar joylanmagan</h4>
+                        <p class="text-slate-500 text-xs max-w-md mx-auto">
+                            Sinf rahbari (Kenjebaev Jambil) yoki Adminlar tizimga kirib yangi postlar va ART ijodiy ishlarini joylashlari mumkin.
+                        </p>
+                    </div>
+                `;
+                renderMiniLeaderboard();
+                return;
+            }
+
+            container.innerHTML = appState.posts.map(post => {
+                const isLiked = user && post.likes.includes(user.id);
+                const authorObj = getAllUsers().find(u => u.id === post.authorId) || { fullName: post.authorName, avatar: '' };
+
+                return `
+                    <article class="bg-white/95 rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                ${renderAvatar(authorObj, "w-11 h-11 text-sm")}
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h4 class="font-extrabold text-slate-900 text-sm">${post.authorName}</h4>
+                                        <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">${post.authorRoleLabel}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-0.5">${post.date}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">${post.category}</span>
+                                ${isAdmin(user) ? `<button onclick="deletePost('${post.id}')" title="O'chirish" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 mb-1.5">${post.title}</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">${post.body}</p>
+                        </div>
+
+                        ${post.image ? `<div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50"><img src="${post.image}" alt="${post.title}" class="w-full max-h-96 object-cover"></div>` : ''}
+
+                        <div class="flex items-center gap-4 pt-2 border-t border-slate-100">
+                            <button onclick="toggleLikePost('${post.id}')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${isLiked ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-600'}">
+                                <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i>
+                                <span>${post.likes.length} Yoqdi</span>
+                            </button>
+                            <span class="text-xs font-semibold text-slate-500">
+                                <i class="fa-regular fa-comment mr-1"></i> ${post.comments.length} izoh
+                            </span>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-2xl p-4 space-y-3">
+                            ${post.comments.length > 0 ? `
+                                <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                                    ${post.comments.map(c => `
+                                        <div class="bg-white p-2.5 rounded-xl border border-slate-200/70 text-xs">
+                                            <div class="flex justify-between font-bold text-slate-800 mb-0.5">
+                                                <span>${c.author}</span>
+                                                <span class="text-[10px] text-slate-400 font-normal">${c.time}</span>
+                                            </div>
+                                            <p class="text-slate-600">${c.text}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : `<p class="text-xs text-slate-400">Hali izohlar yo'q. Birinchi bo'lib fikr bildiring!</p>`}
+
+                            <form onsubmit="handleAddComment(event, '${post.id}')" class="flex gap-2">
+                                <input type="text" id="commentInput_${post.id}" placeholder="${user ? 'Izoh yozing...' : 'Izoh yozish uchun tizimga kiring...'}" class="flex-1 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-500">
+                                <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">Yuborish</button>
+                            </form>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            renderMiniLeaderboard();
+        }
+
+        function renderMiniLeaderboard() {
+            const container = document.getElementById('miniLeaderboard');
+            const sorted = [...appState.students].sort((a, b) => b.rating - a.rating || a.num - b.num).slice(0, 5);
+            const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+
+            container.innerHTML = sorted.map((st, idx) => `
+                <div onclick="openStudentDetailModal('${st.id}')" class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 cursor-pointer transition border border-slate-100">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="text-base shrink-0">${medals[idx]}</span>
+                        ${renderAvatar(st, "w-8 h-8 text-xs")}
+                        <div class="truncate">
+                            <div class="text-xs font-bold text-slate-900 truncate">${st.fullName}</div>
+                            <div class="text-[10px] text-slate-500 truncate">${st.bio || "7-B o'quvchisi"}</div>
+                        </div>
+                    </div>
+                    <span class="ml-2 px-2.5 py-1 rounded-xl bg-amber-100 text-amber-800 font-extrabold text-xs shrink-0">${st.rating} ⭐</span>
+                </div>
+            `).join('');
+        }
+
+        // 9. STUDENTS & RATING TAB LOGIC
+        function renderStudentsTab() {
+            const user = getCurrentUser();
+            const canGrade = canGradeOrAssign(user);
+
+            const quickGradeArea = document.getElementById('teacherGradeQuickBtnArea');
+            if (canGrade) {
+                quickGradeArea.innerHTML = `
+                    <button onclick="openGradeModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-md shadow-amber-500/25 transition flex items-center gap-2">
+                        <i class="fa-solid fa-star"></i>
+                        <span>Baho qo'yish (Reyting)</span>
+                    </button>
+                `;
+            } else {
+                quickGradeArea.innerHTML = '';
+            }
+
+            const byRating = [...appState.students].sort((a, b) => b.rating - a.rating || a.num - b.num);
+            const rankMap = {};
+            byRating.forEach((s, i) => rankMap[s.id] = i + 1);
+
+            const podiumGrid = document.getElementById('podiumGrid');
+            const podiumColors = [
+                { badge: '🥇 1-O\'RIN', border: 'border-amber-300 bg-gradient-to-br from-amber-50 to-yellow-50/60', scoreBg: 'bg-amber-500 text-white' },
+                { badge: '🥈 2-O\'RIN', border: 'border-slate-300 bg-gradient-to-br from-slate-50 to-slate-100/80', scoreBg: 'bg-slate-600 text-white' },
+                { badge: '🥉 3-O\'RIN', border: 'border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50/50', scoreBg: 'bg-orange-500 text-white' }
+            ];
+
+            podiumGrid.innerHTML = byRating.slice(0, 3).map((st, idx) => `
+                <div onclick="openStudentDetailModal('${st.id}')" class="rounded-3xl p-5 border-2 ${podiumColors[idx].border} cursor-pointer hover:shadow-lg transition flex items-center gap-4">
+                    ${renderAvatar(st, "w-16 h-16 text-lg")}
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="text-[11px] font-extrabold tracking-wide text-slate-700">${podiumColors[idx].badge}</span>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${podiumColors[idx].scoreBg}">${st.rating} ball</span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-sm leading-snug line-clamp-2">${st.fullName}</h4>
+                        <p class="text-xs text-slate-500 truncate mt-1">${st.bio || "7-B sinfi o'quvchisi"}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const search = (document.getElementById('studentSearchInput')?.value || '').toLowerCase();
+            const sortBy = document.getElementById('studentSortSelect')?.value || 'number';
+
+            let list = appState.students.filter(s => s.fullName.toLowerCase().includes(search));
+            if (sortBy === 'rating') list.sort((a, b) => b.rating - a.rating || a.num - b.num);
+            else if (sortBy === 'name') list.sort((a, b) => a.fullName.localeCompare(b.fullName));
+            else list.sort((a, b) => a.num - b.num);
+
+            const grid = document.getElementById('allStudentsGrid');
+            grid.innerHTML = list.map(st => {
+                const rank = rankMap[st.id];
+                return `
+                    <div class="bg-slate-50/80 hover:bg-white rounded-3xl p-5 border border-slate-200 hover:border-indigo-300 hover:shadow-lg transition flex flex-col justify-between">
+                        <div onclick="openStudentDetailModal('${st.id}')" class="cursor-pointer">
+                            <div class="flex items-start justify-between gap-2 mb-3">
+                                <span class="text-xs font-extrabold px-2.5 py-1 rounded-xl ${rank <= 3 && st.rating > 0 ? 'bg-amber-100 text-amber-800' : 'bg-white border border-slate-200 text-slate-600'}">
+                                    #${st.num} • ${rank}-o'rin
+                                </span>
+                                <span class="text-xs font-extrabold px-2.5 py-1 rounded-xl bg-indigo-600 text-white shadow-xs">
+                                    ${st.rating} ⭐
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3">
+                                ${renderAvatar(st, "w-14 h-14 text-base")}
+                                <div class="min-w-0">
+                                    <h4 class="font-extrabold text-slate-900 text-sm leading-snug line-clamp-2">${st.fullName}</h4>
+                                    <div class="mt-1">${getRoleBadgeHTML(st.role)}</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 bg-white p-3 rounded-2xl border border-slate-100 line-clamp-2 min-h-[48px]">
+                                ${st.bio || "O'quvchi hali o'zi haqida ma'lumot kiritmagan."}
+                            </p>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-200/70 flex items-center justify-between gap-2">
+                            <button onclick="openStudentDetailModal('${st.id}')" class="text-xs font-bold text-indigo-600 hover:text-indigo-800">
+                                Profil & Baholar →
+                            </button>
+                            ${canGrade ? `
+                                <button onclick="openGradeModal('${st.id}')" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold text-xs transition">
+                                    + Baho
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openStudentDetailModal(studentId) {
+            const st = appState.students.find(s => s.id === studentId);
+            if (!st) return;
+
+            const gradesList = st.grades && st.grades.length > 0
+                ? st.grades.slice().reverse().map(g => `
+                    <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
+                        <div>
+                            <div class="font-bold text-slate-900">${g.subject} <span class="text-slate-400 font-normal">• ${g.teacher}</span></div>
+                            ${g.comment ? `<div class="text-slate-600 mt-0.5">"${g.comment}"</div>` : ''}
+                            <div class="text-[10px] text-slate-400 mt-0.5">${g.date}</div>
+                        </div>
+                        <span class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm">+${g.score}</span>
+                    </div>
+                `).join('')
+                : `<p class="text-xs text-slate-400 text-center py-4">Hozircha baholar qo'yilmagan (0 ball).</p>`;
+
+            document.getElementById('studentDetailContent').innerHTML = `
+                <div class="text-center">
+                    <div class="inline-block mb-3">${renderAvatar(st, "w-24 h-24 text-2xl mx-auto")}</div>
+                    <h3 class="text-xl font-extrabold text-slate-900">${st.fullName}</h3>
+                    <div class="flex items-center justify-center gap-2 mt-1.5">
+                        ${getRoleBadgeHTML(st.role)}
+                        <span class="px-3 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold">Reyting: ${st.rating} ball</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-cake-candles text-pink-500 mr-1"></i> Tug'ilgan sana: <strong>${st.birthday}</strong></p>
+                </div>
+
+                <div class="mt-5 bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4">
+                    <div class="text-xs font-bold text-indigo-900 mb-1">O'zi haqida ma'lumot:</div>
+                    <p class="text-xs text-slate-700 leading-relaxed">${st.bio || "Ma'lumot kiritilmagan."}</p>
+                </div>
+
+                <div class="mt-5">
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5">Baholar va reyting ballari tarixi</h4>
+                    <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                        ${gradesList}
+                    </div>
+                </div>
+            `;
+            document.getElementById('studentDetailModal').classList.remove('hidden');
+        }
+
+        function closeStudentDetailModal() {
+            document.getElementById('studentDetailModal').classList.add('hidden');
+        }
+
+        // 10. GRADING MODAL LOGIC
+        function openGradeModal(preselectedStudentId = '') {
+            const user = getCurrentUser();
+            if (!canGradeOrAssign(user)) {
+                showToast("Faqat ustozlar va adminlar baho qo'ya oladi!", "error");
+                return;
+            }
+
+            const studentSel = document.getElementById('gradeStudentSelect');
+            studentSel.innerHTML = appState.students.map(s =>
+                `<option value="${s.id}" ${s.id === preselectedStudentId ? 'selected' : ''}>${s.num}. ${s.fullName} (${s.rating} ball)</option>`
+            ).join('');
+
+            const subjects = ["Matematika", "Fizika", "O'zbek-tili", "Shet-tili", "ART / Kelajak soati", "Informatika", "Tariyx", "Geografiya", "Biologiya", "Ximiya", "Qaraqalpaq-tili", "Rus-tili", "Texnologiya", "Dene tarbiya", "Tarbiya"];
+            const subjSel = document.getElementById('gradeSubjectSelect');
+            subjSel.innerHTML = subjects.map(sub =>
+                `<option value="${sub}" ${user.subject && user.subject.includes(sub) ? 'selected' : ''}>${sub}</option>`
+            ).join('');
+
+            document.getElementById('gradeModal').classList.remove('hidden');
+        }
+
+        function closeGradeModal() {
+            document.getElementById('gradeModal').classList.add('hidden');
+        }
+
+        function handleGradeSubmit(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            const studentId = document.getElementById('gradeStudentSelect').value;
+            const subject = document.getElementById('gradeSubjectSelect').value;
+            const score = parseInt(document.getElementById('gradePointsSelect').value, 10);
+            const comment = document.getElementById('gradeCommentInput').value.trim();
+
+            const student = appState.students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const now = new Date();
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+
+            student.rating += score;
+            if (!student.grades) student.grades = [];
+            student.grades.push({
+                subject,
+                score,
+                teacher: user.fullName,
+                comment,
+                date: dateStr
+            });
+
+            saveState();
+            closeGradeModal();
+            document.getElementById('gradeCommentInput').value = '';
+            renderStudentsTab();
+            renderMiniLeaderboard();
+            showToast(`${student.fullName}ga ${subject} fanidan +${score} ball qo'yildi!`, "success");
+        }
+
+        // 11. HOMEWORK TAB LOGIC
+        function renderHomeworkTab() {
+            const user = getCurrentUser();
+            const addCard = document.getElementById('addHomeworkCard');
+            const subjects = ["Matematika", "Fizika", "O'zbek-tili", "Shet-tili", "ART / Kelajak soati", "Informatika", "Tariyx", "Geografiya", "Biologiya", "Ximiya", "Qaraqalpaq-tili", "Rus-tili", "Texnologiya", "Dene tarbiya", "Tarbiya"];
+
+            if (canGradeOrAssign(user)) {
+                addCard.classList.remove('hidden');
+                const hwSubjInput = document.getElementById('hwSubjectInput');
+                if (hwSubjInput.options.length === 0) {
+                    hwSubjInput.innerHTML = subjects.map(s => `<option value="${s}" ${user.subject && user.subject.includes(s) ? 'selected' : ''}>${s}</option>`).join('');
+                }
+            } else {
+                addCard.classList.add('hidden');
+            }
+
+            const filterSel = document.getElementById('hwFilterSubject');
+            const currentFilter = filterSel.value;
+            if (filterSel.options.length <= 1) {
+                subjects.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    filterSel.appendChild(opt);
+                });
+            }
+
+            document.getElementById('hwCountBadge').innerText = appState.homework.length;
+
+            const filtered = currentFilter === 'ALL'
+                ? appState.homework
+                : appState.homework.filter(h => h.subject === currentFilter);
+
+            const container = document.getElementById('homeworkListContainer');
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 space-y-2">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto text-xl">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm">Hozircha uyga vazifalar berilmagan</h4>
+                        <p class="text-xs text-slate-400">Ustozlar tizimga kirib yangi vazifa qo'shganida shu yerda ko'rinadi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(hw => {
+                const isDone = user && hw.completedBy && hw.completedBy.includes(user.id);
+                return `
+                    <div class="p-5 rounded-3xl border ${isDone ? 'bg-emerald-50/40 border-emerald-200' : 'bg-slate-50 border-slate-200'} flex flex-col justify-between gap-4">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <span class="px-3 py-1 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold text-xs">${hw.subject}</span>
+                                <span class="text-xs font-semibold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg">
+                                    <i class="fa-regular fa-calendar mr-1"></i> Muddat: ${hw.deadline}
+                                </span>
+                            </div>
+                            <p class="text-sm font-bold text-slate-900 leading-relaxed mt-2">${hw.task}</p>
+                            <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-chalkboard-user mr-1"></i> Ustoz: <strong>${hw.teacher}</strong></p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-200/70">
+                            <span class="text-[11px] text-slate-500">${(hw.completedBy || []).length} o'quvchi bajardi</span>
+                            ${user ? `
+                                <button onclick="toggleHomeworkDone('${hw.id}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${isDone ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'}">
+                                    <i class="fa-solid ${isDone ? 'fa-check-double' : 'fa-check'} mr-1"></i>
+                                    ${isDone ? 'Bajarildi' : 'Bajardim'}
+                                </button>
+                            ` : `<span class="text-[11px] text-slate-400">Belgilash uchun kiring</span>`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleAddHomework(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            if (!canGradeOrAssign(user)) return;
+
+            const subject = document.getElementById('hwSubjectInput').value;
+            const deadline = document.getElementById('hwDeadlineInput').value;
+            const task = document.getElementById('hwTaskInput').value.trim();
+
+            appState.homework.unshift({
+                id: 'hw_' + Date.now(),
+                subject,
+                teacher: user.fullName,
+                task,
+                deadline,
+                completedBy: []
+            });
+            saveState();
+            document.getElementById('hwTaskInput').value = '';
+            renderHomeworkTab();
+            showToast("Yangi uyga vazifa e'lon qilindi!", "success");
+        }
+
+        function toggleHomeworkDone(hwId) {
+            const user = getCurrentUser();
+            if (!user) return;
+            const hw = appState.homework.find(h => h.id === hwId);
+            if (!hw) return;
+            if (!hw.completedBy) hw.completedBy = [];
+            const idx = hw.completedBy.indexOf(user.id);
+            if (idx === -1) hw.completedBy.push(user.id);
+            else hw.completedBy.splice(idx, 1);
+            saveState();
+            renderHomeworkTab();
+        }
+
+        // 12. TIMETABLE TAB LOGIC
+        function renderScheduleTab() {
+            const dayIdx = new Date().getDay();
+            const dayNames = ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"];
+            document.getElementById('todayDayLabel').innerText = `Bugun: ${dayNames[dayIdx]}`;
+
+            document.querySelectorAll('[data-col-day]').forEach(th => {
+                if (parseInt(th.dataset.colDay, 10) === dayIdx) {
+                    th.classList.add('bg-indigo-600', 'text-white');
+                } else {
+                    th.classList.remove('bg-indigo-600', 'text-white');
+                }
+            });
+
+            const tbody = document.getElementById('fullTimetableBody');
+            tbody.innerHTML = TIMETABLE_ROWS.map(row => `
+                <tr>
+                    <td class="py-3 px-3 text-center font-extrabold text-slate-700 bg-slate-50">${row.num}</td>
+                    <td class="py-3 px-3 font-bold text-slate-600 bg-slate-50 whitespace-nowrap">${row.time}</td>
+                    ${row.days.map((slot, idx) => {
+                        const isTodayCol = (idx + 1) === dayIdx;
+                        if (!slot) {
+                            return `<td class="p-2 ${isTodayCol ? 'bg-indigo-50/40' : 'bg-slate-50/40'} text-center text-slate-400 italic">${row.num === 6 ? 'Tanaffus' : '—'}</td>`;
+                        }
+                        return `
+                            <td class="p-2 ${isTodayCol ? 'bg-indigo-50/50' : ''}">
+                                <div class="p-2.5 rounded-xl border ${slot.bg} text-center shadow-2xs">
+                                    <div class="font-extrabold text-xs mb-0.5">${slot.subject}</div>
+                                    <div class="text-[11px] opacity-85 leading-tight">${slot.teachers}</div>
+                                </div>
+                            </td>
+                        `;
+                    }).join('')}
+                </tr>
+            `).join('');
+        }
+
+        // 13. TEACHERS & SCHOOL INFO TAB
+        function renderSchoolTab() {
+            document.getElementById('schoolTitleDisplay').innerText = appState.schoolInfo.title;
+            document.getElementById('schoolDescDisplay').innerText = appState.schoolInfo.description;
+
+            const grid = document.getElementById('teachersDirectoryGrid');
+            grid.innerHTML = appState.teachers.map(t => `
+                <div class="p-5 rounded-3xl border ${t.role === 'homeroom_teacher' ? 'border-violet-300 bg-violet-50/50' : 'border-slate-200 bg-slate-50/70'} flex flex-col justify-between gap-3">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            ${renderAvatar(t, "w-12 h-12 text-sm")}
+                            <div>
+                                <h4 class="font-extrabold text-slate-900 text-sm leading-snug">${t.fullName}</h4>
+                                <div class="mt-1">${getRoleBadgeHTML(t.role)}</div>
+                            </div>
+                        </div>
+                        <div class="inline-block px-3 py-1 rounded-xl bg-white border border-slate-200 text-xs font-bold text-indigo-700 mb-2">
+                            📚 ${t.subject}
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">${t.bio || ''}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 14. PERSONAL PROFILE TAB LOGIC
+        function renderProfileTab() {
+            const user = getCurrentUser();
+            const container = document.getElementById('personalProfileContainer');
+            if (!user) {
+                container.innerHTML = `<p class="text-center text-slate-500">Iltimos, avval tizimga kiring.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100">
+                    <div class="relative group">
+                        ${renderAvatar(user, "w-24 h-24 text-2xl")}
+                        <label class="mt-2 cursor-pointer inline-flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Rasm yuklash</span>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleProfileAvatarUpload(event)">
+                        </label>
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <div class="mb-1.5">${getRoleBadgeHTML(user.role)}</div>
+                        <h2 class="text-2xl font-extrabold text-slate-900">${user.fullName}</h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Login: <strong class="font-mono text-slate-800">${user.login}</strong>
+                            ${user.birthday ? ` • Tug'ilgan sana: <strong>${user.birthday}</strong>` : ''}
+                            ${user.subject ? ` • Fan: <strong>${user.subject}</strong>` : ''}
+                        </p>
+                    </div>
+                </div>
+
+                <form onsubmit="handleSavePersonalProfile(event)" class="space-y-5 pt-6">
+                    <div>
+                        <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2">
+                            O'zim haqimda ma'lumot (Bio, qiziqishlar, orzular)
+                        </label>
+                        <textarea id="profileBioInput" rows="3" placeholder="O'zingiz haqingizda yozing..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:border-indigo-500">${user.bio || ''}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2">
+                                Yangi parol (o'zgartirish uchun)
+                            </label>
+                            <input type="text" id="profileNewPassInput" value="${user.password}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-2">
+                                Profil rasmi havolasi (URL - ixtiyoriy)
+                            </label>
+                            <input type="url" id="profileAvatarUrlInput" value="${user.avatar && user.avatar.startsWith('http') ? user.avatar : ''}" placeholder="https://..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-7 py-3 rounded-2xl text-sm shadow-lg shadow-indigo-500/25 transition">
+                            <i class="fa-solid fa-floppy-disk mr-2"></i> O'zgarishlarni saqlash
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        function handleProfileAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const targetList = user.userType === 'student' ? appState.students : appState.teachers;
+                const record = targetList.find(u => u.id === user.id);
+                if (record) {
+                    record.avatar = evt.target.result;
+                    saveState();
+                    refreshEntireUI();
+                    renderProfileTab();
+                    showToast("Profil rasmingiz yangilandi!", "success");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleSavePersonalProfile(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const bio = document.getElementById('profileBioInput').value.trim();
+            const newPass = document.getElementById('profileNewPassInput').value.trim();
+            const avatarUrl = document.getElementById('profileAvatarUrlInput').value.trim();
+
+            if (!newPass) {
+                showToast("Parol bo'sh bo'lishi mumkin emas!", "error");
+                return;
+            }
+
+            const targetList = user.userType === 'student' ? appState.students : appState.teachers;
+            const record = targetList.find(u => u.id === user.id);
+            if (record) {
+                record.bio = bio;
+                record.password = newPass;
+                if (avatarUrl) record.avatar = avatarUrl;
+                saveState();
+                refreshEntireUI();
+                renderProfileTab();
+                showToast("Profilingiz muvaffaqiyatli saqlandi!", "success");
+            }
+        }
+
+        // 15. ADMIN PANEL LOGIC
+        function renderAdminTab() {
+            const user = getCurrentUser();
+            if (!isAdmin(user)) {
+                switchMainTab('feed');
+                return;
+            }
+
+            document.getElementById('adminSchoolTitleInput').value = appState.schoolInfo.title;
+            document.getElementById('adminSchoolDescInput').value = appState.schoolInfo.description;
+            const bg = appState.schoolBackground || { image: '', opacity: 82 };
+            const slider = document.getElementById('adminBgOpacityInput');
+            const label = document.getElementById('adminBgOpacityLabel');
+            if (slider) slider.value = bg.opacity;
+            if (label) label.innerText = `${bg.opacity}%`;
+
+            renderAdminUsersTable();
+        }
+
+        function saveAdminSchoolInfo() {
+            const user = getCurrentUser();
+            if (!isAdmin(user)) return;
+            appState.schoolInfo.title = document.getElementById('adminSchoolTitleInput').value.trim();
+            appState.schoolInfo.description = document.getElementById('adminSchoolDescInput').value.trim();
+            saveState();
+            renderSchoolTab();
+            showToast("Maktab haqida ma'lumot yangilandi!", "success");
+        }
+
+        function renderAdminUsersTable() {
+            const search = (document.getElementById('adminUserSearch')?.value || '').toLowerCase();
+            const filter = document.getElementById('adminRoleFilter')?.value || 'ALL';
+            const tbody = document.getElementById('adminUsersTableBody');
+
+            let users = getAllUsers().filter(u =>
+                u.fullName.toLowerCase().includes(search) ||
+                u.login.toLowerCase().includes(search)
+            );
+
+            if (filter === 'student') users = users.filter(u => u.userType === 'student');
+            else if (filter === 'teacher') users = users.filter(u => u.userType === 'teacher');
+            else if (filter === 'admins') users = users.filter(u => u.role === 'super_admin' || u.role === 'assistant_admin');
+
+            tbody.innerHTML = users.map(u => {
+                const isSayidbek = u.id === 's_13';
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-bold text-slate-900">
+                            <div class="flex items-center gap-2.5">
+                                ${renderAvatar(u, "w-8 h-8 text-xs")}
+                                <div>
+                                    <div>${u.fullName}</div>
+                                    <div class="text-[10px] text-slate-400 font-normal">${u.userType === 'teacher' ? u.subject : `O'quvchi #${u.num}`}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-0.5 rounded-lg text-[11px] font-semibold ${u.userType === 'teacher' ? 'bg-emerald-50 text-emerald-700' : 'bg-indigo-50 text-indigo-700'}">
+                                ${u.userType === 'teacher' ? 'Ustoz' : "O'quvchi"}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <input type="text" id="adm_login_${u.id}" value="${u.login}" class="w-28 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-mono text-xs focus:outline-none focus:border-indigo-500">
+                        </td>
+                        <td class="py-3 px-4">
+                            <input type="text" id="adm_pass_${u.id}" value="${u.password}" class="w-28 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-mono text-xs focus:outline-none focus:border-indigo-500">
+                        </td>
+                        <td class="py-3 px-4">
+                            <select id="adm_role_${u.id}" ${isSayidbek ? 'disabled' : ''} class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-indigo-500">
+                                <option value="student" ${u.role === 'student' ? 'selected' : ''}>O'quvchi</option>
+                                <option value="teacher" ${u.role === 'teacher' ? 'selected' : ''}>Ustoz</option>
+                                <option value="homeroom_teacher" ${u.role === 'homeroom_teacher' ? 'selected' : ''}>Sinf Rahbari</option>
+                                <option value="assistant_admin" ${u.role === 'assistant_admin' ? 'selected' : ''}>⭐ Yordamchi Admin</option>
+                                <option value="super_admin" ${u.role === 'super_admin' ? 'selected' : ''}>👑 Bosh Admin</option>
+                            </select>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="saveAdminUserRow('${u.id}', '${u.userType}')" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-2xs transition">
+                                Saqlash
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function saveAdminUserRow(userId, userType) {
+            const current = getCurrentUser();
+            if (!isAdmin(current)) return;
+
+            const newLogin = document.getElementById(`adm_login_${userId}`).value.trim().toLowerCase();
+            const newPass = document.getElementById(`adm_pass_${userId}`).value.trim();
+            const newRole = document.getElementById(`adm_role_${userId}`).value;
+
+            if (!newLogin || !newPass) {
+                showToast("Login va parol bo'sh bo'lishi mumkin emas!", "error");
+                return;
+            }
+
+            const duplicate = getAllUsers().find(u => u.id !== userId && u.login.toLowerCase() === newLogin);
+            if (duplicate) {
+                showToast(`"${newLogin}" logini boshqa foydalanuvchida band!`, "error");
+                return;
+            }
+
+            const list = userType === 'student' ? appState.students : appState.teachers;
+            const target = list.find(u => u.id === userId);
+            if (!target) return;
+
+            target.login = newLogin;
+            target.password = newPass;
+            if (userId !== 's_13') {
+                target.role = newRole;
+            }
+
+            saveState();
+            refreshEntireUI();
+            renderAdminUsersTable();
+            showToast(`${target.fullName} ma'lumotlari saqlandi!`, "success");
+        }
+
+        // 16. INITIALIZATION
+        function refreshEntireUI() {
+            renderHeaderAuth();
+            renderPostsFeed();
+            renderStudentsTab();
+            renderHomeworkTab();
+            renderScheduleTab();
+            renderSchoolTab();
+        }
+
+        window.onload = function() {
+            loadState();
+            window.applySchoolBackgroundToPage();
+            refreshEntireUI();
+        };
+    </script>
+</body>
+</html>
